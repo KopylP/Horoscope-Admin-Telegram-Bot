@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Horoscope.Admin.Bot", "Horoscope.Admin.Bot\Horoscope.Admin.Bot.csproj", "{FEF7A60A-22B0-411E-9F11-4EE49E7CCAFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEF7A60A-22B0-411E-9F11-4EE49E7CCAFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEF7A60A-22B0-411E-9F11-4EE49E7CCAFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEF7A60A-22B0-411E-9F11-4EE49E7CCAFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEF7A60A-22B0-411E-9F11-4EE49E7CCAFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

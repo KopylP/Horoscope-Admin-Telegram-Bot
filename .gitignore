@@ -1,0 +1,17 @@
+.idea/
+
+*.suo
+*.user
+.vs/
+[Bb]in/
+[Oo]bj/
+_UpgradeReport_Files/
+[Pp]ackages/
+
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+horoscopewidget-70549-firebase-adminsdk-w0yxe-9bca91a069.json
+appsettings.Development.json
+appsettings.json
