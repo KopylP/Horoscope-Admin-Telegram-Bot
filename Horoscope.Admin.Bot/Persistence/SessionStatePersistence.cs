@@ -9,10 +9,10 @@ namespace Horoscope.Admin.Bot.Persistence;
 [FirestoreData]
 public sealed class SessionStatePersistence : IFirebaseEntity
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [FirestoreProperty] 
-    public string CurrentState { get; set; } = string.Empty;
+    public string CurrentState { get; init; } = string.Empty;
 
     public static SessionStatePersistence Create(string id, State currentState) => new()
     {

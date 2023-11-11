@@ -17,7 +17,7 @@ public static class EnumHelpers
             .ToArray();
     }
     
-    public static bool TryGetEnumValueFromDisplayName<T>(string displayName, out T enumValue) where T : Enum
+    public static bool TryGetEnumValueFromDisplayName<T>(string displayName, out T? enumValue) where T : Enum
     {
         enumValue = default;
         foreach (var field in typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static))
@@ -25,7 +25,7 @@ public static class EnumHelpers
             var attribute = field.GetCustomAttribute<DisplayAttribute>();
             if (attribute?.GetName() == displayName)
             {
-                enumValue = (T)field.GetValue(null);
+                enumValue = (T?)field.GetValue(null);
                 return true;
             }
         }
