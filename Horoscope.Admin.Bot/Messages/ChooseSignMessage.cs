@@ -50,7 +50,7 @@ public sealed class ChooseSignMessage: BaseMessage
         messageBuilder.Append($"*{_date.ToString(DateFormats.DdMmYyyy)}*\n");
         messageBuilder.Append("Опубліковані передбачення:");
 
-        foreach (var sign in EnumHelpers.GetEnumValues<Sign>(skipFirst: true))
+        foreach (var sign in EnumHelpers.GetEnumValues<ZodiacSign>(skipFirst: true))
         {
             var publishedHoroscope = horoscopes
                 .FirstOrDefault(horoscopePersistence => horoscopePersistence.Sign == sign.ToString());
@@ -90,7 +90,7 @@ public sealed class ChooseSignMessage: BaseMessage
     {
         var keyboardBuilder = ReplyKeyboardMarkupBuilder.Create();
 
-        EnumHelpers.GetDisplayNames<Sign>(skipFirst: true)
+        EnumHelpers.GetDisplayNames<ZodiacSign>(skipFirst: true)
             .ToTwoDimensionArray(rowSize: 2)
             .ToList()
             .ForEach(row => keyboardBuilder.AddRow(row));

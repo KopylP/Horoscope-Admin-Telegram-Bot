@@ -35,13 +35,13 @@ public sealed class AwaitingZodiacSignHandler : SessionBasedHandler<NewtonsoftJs
         await HandleSignAsync(sign);
     }
     
-    private bool TryGetSignFromRequest(NewtonsoftJsonUpdate request, out Sign sign)
+    private bool TryGetSignFromRequest(NewtonsoftJsonUpdate request, out ZodiacSign sign)
     {
         return EnumHelpers.TryGetEnumValueFromDisplayName(
-            request.GetMessage(), out sign) && sign != Sign.None;
+            request.GetMessage(), out sign) && sign != ZodiacSign.None;
     }
     
-    private async Task HandleSignAsync(Sign sign)
+    private async Task HandleSignAsync(ZodiacSign sign)
     {
         var draft = ExecutionContext.Draft;
         var publishedDraft = await _draftRepository.CreateFromPublished(draft.Date!.Value, sign);

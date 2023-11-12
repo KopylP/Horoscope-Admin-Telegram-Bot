@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Horoscope.Admin.Bot.Models;
 
-public enum Sign
+public enum ZodiacSign
 {
     None,
     

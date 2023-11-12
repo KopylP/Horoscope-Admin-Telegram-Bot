@@ -8,5 +8,5 @@ public interface IDraftRepository
     public Task<Draft> GetAsync(long chatId);
     public Task SaveAsync(long chatId, Draft draft);
     public Task PublishAsync(Draft draft);
-    public Task<Draft?> CreateFromPublished(DateTime date, Sign sign);
+    public Task<Draft?> CreateFromPublished(DateTime date, ZodiacSign sign);
 }

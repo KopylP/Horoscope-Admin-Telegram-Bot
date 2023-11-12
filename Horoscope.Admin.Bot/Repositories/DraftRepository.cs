@@ -28,7 +28,7 @@ public sealed class DraftRepository : IDraftRepository
                 DateTime.ParseExact(draftPersistence.Date, DateFormats.DdMmYyyy, CultureInfo.InvariantCulture)
                 : null,
             Foresight = (Foresight?)draftPersistence?.Foresight,
-            Sign = draftPersistence?.Sign?.ToEnum<Sign>() ?? Sign.None
+            Sign = draftPersistence?.Sign?.ToEnum<ZodiacSign>() ?? ZodiacSign.None
         };
     }
 
@@ -62,7 +62,7 @@ public sealed class DraftRepository : IDraftRepository
         await _firestoreProvider.AddOrUpdate(horoscope);
     }
 
-    public async Task<Draft?> CreateFromPublished(DateTime date, Sign sign)
+    public async Task<Draft?> CreateFromPublished(DateTime date, ZodiacSign sign)
     {
         var id = GetPublishId(date, sign);
         
@@ -76,11 +76,11 @@ public sealed class DraftRepository : IDraftRepository
         {
             Date = DateTime.ParseExact(publish.Date, DateFormats.DdMmYyyy, CultureInfo.InvariantCulture),
             Foresight = (Foresight)publish.Foresight,
-            Sign = publish.Sign.ToEnum<Sign>()
+            Sign = publish.Sign.ToEnum<ZodiacSign>()
         };
     }
 
-    private string GetPublishId(DateTime date, Sign sign, string language = "UA") 
+    private string GetPublishId(DateTime date, ZodiacSign sign, string language = "UA") 
         => $"{date.ToString(DateFormats.DdMmYyyy)}-{sign.ToString()}-UA"
         .Replace(".", "-");
 }

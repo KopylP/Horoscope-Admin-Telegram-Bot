@@ -4,7 +4,7 @@ namespace Horoscope.Admin.Bot.Framework.Contexts;
 
 public sealed class Draft
 {
-    public Sign Sign { get; set; }
+    public ZodiacSign Sign { get; set; }
     public DateTime? Date { get; set; }
     public string? Language { get; set; }
     public Foresight? Foresight { get; set; }
