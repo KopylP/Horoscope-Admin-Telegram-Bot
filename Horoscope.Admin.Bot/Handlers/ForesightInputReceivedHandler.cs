@@ -1,22 +1,23 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot.Handlers;
 
-public sealed class ForecastProvidedHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
+public sealed class ForesightInputReceivedHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
 {
     private const string ErrorMessage = "Не знаю такої опції \ud83d\ude14 Вибери ще!";
     
     private readonly IMessageFactory _messageFactory;
     
-    public ForecastProvidedHandler(
+    public ForesightInputReceivedHandler(
         IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>? next,
         IMessageFactory messageFactory) 
-        : base(next, State.ForesightProvided)
+        : base(next, State.ForesightInputReceived)
     {
         _messageFactory = messageFactory;
     }
@@ -26,16 +27,33 @@ public sealed class ForecastProvidedHandler: SessionBasedHandler<NewtonsoftJsonU
         switch (request.GetMessage())
         {
             case ReplyCommands.Continue.NextSign:
-                await ExecutionContext.GetSession().FireNextSignAsync();
+                await HandleNextSignAsync();
                 break;
             
             case ReplyCommands.Continue.NextDate:
-                await ExecutionContext.GetSession().FireNextDateAsync();
+                await HandleNextDateAsync();
                 break;
             
             default:
-                await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
+                await SendErrorMessageAsync();
                 break;
         }
+    }
+    
+    private async Task HandleNextSignAsync()
+    {
+        await ExecutionContext.Session
+            .FireAdvanceToNextSignAsync();
+    }
+
+    private async Task HandleNextDateAsync()
+    {
+        await ExecutionContext.Session
+            .FireAdvanceToNextDateAsync();
+    }
+
+    private async Task SendErrorMessageAsync()
+    {
+        await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
     }
 }

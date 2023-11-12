@@ -6,7 +6,7 @@ using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot.Handlers;
 
-public sealed class ApiKeyVerificationHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
+public sealed class AwaitingApiKeyHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
 {
     private const string ErrorMessage = "Ключ не підходить \ud83d\ude22 Спробуй ще!";
     private const string Message = "Супер, підходить! " +
@@ -16,10 +16,10 @@ public sealed class ApiKeyVerificationHandler : SessionBasedHandler<NewtonsoftJs
     private readonly string _apiKey;
     private readonly IMessageFactory _messageFactory;
     
-    public ApiKeyVerificationHandler(
+    public AwaitingApiKeyHandler(
         IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>? next,
         IConfiguration configuration,
-        IMessageFactory messageFactory) : base(next, State.WaitingForApiKey)
+        IMessageFactory messageFactory) : base(next, State.AwaitingApiKey)
     {
         _apiKey = configuration["ApiKey"]!;
         _messageFactory = messageFactory;
@@ -27,13 +27,26 @@ public sealed class ApiKeyVerificationHandler : SessionBasedHandler<NewtonsoftJs
 
     protected override async Task StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
     {
-        if (request.GetMessage() != _apiKey)
+        if (!IsApiKeyValid(request))
         {
-            await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
+            await SendErrorMessageAsync();
             return;
         }
 
-        await _messageFactory.CreateStandardMessage(Message).SendAsync();
-        await ExecutionContext.GetSession().FireApiKeyProvidedAsync();
+        await SendApiKeyCorrectMessage();
+        await ExecutionContext.Session.FireApiKeySubmittedAsync();
     }
+
+    private bool IsApiKeyValid(NewtonsoftJsonUpdate request)
+        => request.GetMessage() == _apiKey;
+    
+    private async Task SendErrorMessageAsync() 
+        => await _messageFactory
+            .CreateStandardMessage(ErrorMessage)
+            .SendAsync();
+
+    private async Task SendApiKeyCorrectMessage() 
+        => await _messageFactory
+        .CreateStandardMessage(Message)
+        .SendAsync();
 }

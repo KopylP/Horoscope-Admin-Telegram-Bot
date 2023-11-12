@@ -3,12 +3,17 @@ namespace Horoscope.Admin.Bot.Session;
 public enum State
 {
     BeforeStart,
-    WaitingForApiKey,
-    StartingEditHoroscope,
-    WaitingForDate,
-    WaitingForLanguage,
-    WaitingForSign,
-    WaitingForForesight,
-    ForesightProvided,
+    AwaitingApiKey,
+    BeginningHoroscopeEdit,
+    AwaitingDateInput,
+    AwaitingLanguageSelection,
+    AwaitingZodiacSign,
+    AwaitingForesightInput,
+    ForesightInputReceived,
     Preview
+}
+
+public static class StateExtensions
+{
+    public static bool IsBeforeStart(this State state) => state == State.BeforeStart;
 }

@@ -7,7 +7,7 @@ namespace Horoscope.Admin.Bot.Messages;
 
 public sealed class StartEditHoroscopeMessage : BaseMessage
 {
-    private const string Message = $"Як будеш готовий, тисни \"{ReplyCommands.StartingEdit.Start}\"";
+    private const string Message = $"Як будеш готовий, тисни \"{ReplyCommands.BeginningHoroscopeEdit.Begin}\"";
     
     public StartEditHoroscopeMessage(ITelegramBotClient botClient) : base(botClient)
     {
@@ -16,9 +16,9 @@ public sealed class StartEditHoroscopeMessage : BaseMessage
     public override async Task SendAsync()
     {
         var keyboard = ReplyKeyboardMarkupBuilder.Create()
-            .AddRow(new KeyboardButton(ReplyCommands.StartingEdit.Start))
+            .AddRow(new KeyboardButton(ReplyCommands.BeginningHoroscopeEdit.Begin))
             .Build();
         
-        await BotClient.SendTextMessageAsync(ExecutionContext.GetChatId(), Message, replyMarkup: keyboard);
+        await BotClient.SendTextMessageAsync(ExecutionContext.ChatId, Message, replyMarkup: keyboard);
     }
 }

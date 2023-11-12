@@ -16,7 +16,7 @@ public abstract class SessionBasedHandler<TRequest> : IChainOfResponsibilityHand
 
     public async Task HandleAsync(TRequest request)
     {
-        if (ExecutionContext.GetSession().State == _handlerState)
+        if (ExecutionContext.Session.State == _handlerState)
         {
             await StateMatchedHandleAsync(request);
             return;

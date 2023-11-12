@@ -7,7 +7,7 @@ public static class ReplyKeyboardMarkupExtensions
 {
     public static ReplyKeyboardMarkupBuilder AddBackAndCancelRow(this ReplyKeyboardMarkupBuilder builder)
     {
-        builder.AddRow(ReplyCommands.Common.Back, ReplyCommands.Common.Cancel);
+        builder.AddRow(ReplyCommands.Common.Back, ReplyCommands.Common.NavigateBeginning);
         return builder;
     }
     

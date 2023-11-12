@@ -9,53 +9,53 @@ public static class SessionStateExtensions
         return session.FireAsync(Trigger.Start);
     }
 
-    public static Task FireApiKeyProvidedAsync(this SessionState<State, Trigger> session)
+    public static Task FireApiKeySubmittedAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.ApiKeyProvided);
+        return session.FireAsync(Trigger.ApiKeySubmitted);
     }
 
-    public static Task FireBackAsync(this SessionState<State, Trigger> session)
+    public static Task FireNavigateBackAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.Back);
+        return session.FireAsync(Trigger.NavigateBack);
     }
 
-    public static Task FireCancelAsync(this SessionState<State, Trigger> session)
+    public static Task FireNavigateBeginningAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.Cancel);
+        return session.FireAsync(Trigger.NavigateBeginning);
     }
 
-    public static Task FireNextSignAsync(this SessionState<State, Trigger> session)
+    public static Task FireAdvanceToNextSignAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.NextSign);
+        return session.FireAsync(Trigger.AdvanceToNextSign);
     }
 
-    public static Task FireNextDateAsync(this SessionState<State, Trigger> session)
+    public static Task FireAdvanceToNextDateAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.NextDate);
+        return session.FireAsync(Trigger.AdvanceToNextDate);
     }
 
-    public static Task FireGoToChangeDescriptionAsync(this SessionState<State, Trigger> session)
+    public static Task FireInitiateDescriptionChangeAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.GoToChangeDescription);
+        return session.FireAsync(Trigger.InitiateDescriptionChange);
     }
 
-    public static Task FireEditHoroscopeStartedAsync(this SessionState<State, Trigger> session)
+    public static Task FireBeginHoroscopeEditingAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.EditHoroscopeStarted);
+        return session.FireAsync(Trigger.BeginHoroscopeEditing);
     }
 
-    public static Task FireDateProvidedAsync(this SessionState<State, Trigger> session)
+    public static Task FireDateSubmittedAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.DateProvided);
+        return session.FireAsync(Trigger.DateSubmitted);
     }
 
-    public static Task FireForesightProvidedAsync(this SessionState<State, Trigger> session)
+    public static Task FireForesightSubmittedAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.ForesightProvided);
+        return session.FireAsync(Trigger.ForesightSubmitted);
     }
 
-    public static Task FireGoToPreviewAsync(this SessionState<State, Trigger> session)
+    public static Task FireProceedToPreviewAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.GoToPreview);
+        return session.FireAsync(Trigger.ProceedToPreview);
     }
 }

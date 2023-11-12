@@ -5,12 +5,12 @@ public static class ReplyCommands
     public static class Common
     {
         public const string Back = "\u2b05\ufe0f Назад";
-        public const string Cancel = "Головне меню \ud83d\udd04";
+        public const string NavigateBeginning = "Головне меню \ud83d\udd04";
     }
 
-    public static class StartingEdit
+    public static class BeginningHoroscopeEdit
     {
-        public const string Start = "Полетіли \ud83d\ude80";
+        public const string Begin = "Полетіли \ud83d\ude80";
     }
     
     public static class Continue

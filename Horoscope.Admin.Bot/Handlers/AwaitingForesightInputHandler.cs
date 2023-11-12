@@ -6,22 +6,22 @@ using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot.Handlers;
 
-public sealed class WaitingForForecastHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
+public sealed class AwaitingForesightInputHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
 {
     private readonly IDraftRepository _draftRepository;
     
-    public WaitingForForecastHandler(
+    public AwaitingForesightInputHandler(
         IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>? next,
-        IDraftRepository draftRepository) : base(next, State.WaitingForForesight)
+        IDraftRepository draftRepository) : base(next, State.AwaitingForesightInput)
     {
         _draftRepository = draftRepository;
     }
 
     protected override async Task StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
     {
-        var draft = ExecutionContext.GetDraft();
+        var draft = ExecutionContext.Draft;
         draft.Foresight = (Foresight)request.GetMessage();
         await _draftRepository.PublishAsync(draft);
-        await ExecutionContext.GetSession().FireForesightProvidedAsync();
+        await ExecutionContext.Session.FireForesightSubmittedAsync();
     }
 }

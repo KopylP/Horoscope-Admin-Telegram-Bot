@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
@@ -24,12 +25,23 @@ public sealed class PreviewHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
         switch (request.GetMessage())
         {
             case ReplyCommands.Preview.Edit:
-                await ExecutionContext.GetSession().FireGoToChangeDescriptionAsync();
+                await HandleEditCommandAsync();
                 break;
             
             default:
-                await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
+                await SendErrorMessageAsync();
                 break;
         }
+    }
+    
+    private async Task HandleEditCommandAsync()
+    {
+        await ExecutionContext.Session
+            .FireInitiateDescriptionChangeAsync();
+    }
+
+    private async Task SendErrorMessageAsync()
+    {
+        await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
     }
 }

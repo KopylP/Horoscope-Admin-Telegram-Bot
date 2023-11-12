@@ -7,6 +7,6 @@ public sealed class BeforeStartStateConfigurator : ISessionStateConfigurator<Sta
     public void Configure(SessionState<State, Trigger> sessionState)
     {
         sessionState.Configure(State.BeforeStart)
-            .Permit(Trigger.Start, State.WaitingForApiKey);
+            .Permit(Trigger.Start, State.AwaitingApiKey);
     }
 }

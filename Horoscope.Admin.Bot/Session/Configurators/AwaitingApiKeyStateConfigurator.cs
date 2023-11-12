@@ -4,19 +4,19 @@ using Telegram.Bot;
 
 namespace Horoscope.Admin.Bot.Session.Configurators;
 
-public sealed class WaitingForApiKeyStateConfigurator : ISessionStateConfigurator<State, Trigger>
+public sealed class AwaitingApiKeyStateConfigurator : ISessionStateConfigurator<State, Trigger>
 {
     private readonly ITelegramBotClient _botClient;
 
-    public WaitingForApiKeyStateConfigurator(ITelegramBotClient botClient)
+    public AwaitingApiKeyStateConfigurator(ITelegramBotClient botClient)
     {
         _botClient = botClient;
     }
 
     public void Configure(SessionState<State, Trigger> sessionState)
     {
-        sessionState.Configure(State.WaitingForApiKey)
-            .Permit(Trigger.ApiKeyProvided, State.StartingEditHoroscope)
+        sessionState.Configure(State.AwaitingApiKey)
+            .Permit(Trigger.ApiKeySubmitted, State.BeginningHoroscopeEdit)
             .PermitReentry(Trigger.Start)
             .OnEntryAsync(() => new ProvideApiKeyMessage(_botClient).SendAsync());
     }

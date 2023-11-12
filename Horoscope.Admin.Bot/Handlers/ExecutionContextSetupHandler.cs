@@ -31,17 +31,17 @@ public sealed class ExecutionContextSetupHandler: IChainOfResponsibilityHandler<
         ExecutionContext.Apply(chatId);
         ExecutionContext.Apply(draft);
 
-        HasNext(async () =>
+        await HasNextAsync(async () =>
         {
             await _next!.HandleAsync(update);
-            await _sessionStateProvider.UpdateAsync(chatId, ExecutionContext.GetSession());
-            await _draftRepository.SaveAsync(chatId, ExecutionContext.GetDraft());
+            await _sessionStateProvider.UpdateAsync(chatId, ExecutionContext.Session);
+            await _draftRepository.SaveAsync(chatId, ExecutionContext.Draft);
         });
     }
 
-    private void HasNext(Func<Task> action)
+    private async Task HasNextAsync(Func<Task> action)
     {
         if (_next is not null)
-            action.Invoke();
+            await action();
     }
 }

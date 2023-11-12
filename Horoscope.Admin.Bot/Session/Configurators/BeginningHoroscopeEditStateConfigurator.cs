@@ -4,20 +4,20 @@ using Telegram.Bot;
 
 namespace Horoscope.Admin.Bot.Session.Configurators;
 
-public sealed class StartingEditHoroscopeStateConfigurator : ISessionStateConfigurator<State, Trigger>
+public sealed class BeginningHoroscopeEditStateConfigurator : ISessionStateConfigurator<State, Trigger>
 {
     private readonly ITelegramBotClient _botClient;
 
-    public StartingEditHoroscopeStateConfigurator(ITelegramBotClient botClient)
+    public BeginningHoroscopeEditStateConfigurator(ITelegramBotClient botClient)
     {
         _botClient = botClient;
     }
 
     public void Configure(SessionState<State, Trigger> sessionState)
     {
-        sessionState.Configure(State.StartingEditHoroscope)
-            .Permit(Trigger.Start, State.WaitingForApiKey)
-            .Permit(Trigger.EditHoroscopeStarted, State.WaitingForDate)
+        sessionState.Configure(State.BeginningHoroscopeEdit)
+            .Permit(Trigger.Start, State.AwaitingApiKey)
+            .Permit(Trigger.BeginHoroscopeEditing, State.AwaitingDateInput)
             .OnEntryAsync(() => new StartEditHoroscopeMessage(_botClient).SendAsync());
     }
 }

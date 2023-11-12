@@ -1,8 +1,10 @@
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
+using Telegram.Bot.Types;
 
 namespace Horoscope.Admin.Bot.Handlers;
 
@@ -21,23 +23,32 @@ public sealed class StartHandler : IChainOfResponsibilityHandler<NewtonsoftJsonU
 
     public async Task HandleAsync(NewtonsoftJsonUpdate request)
     {
-        var session = ExecutionContext.GetSession();
-        
-        if (request.GetMessage() != CommandName)
+        if (!IsStartCommandReceived(request))
         {
-            if (session.State == State.BeforeStart)
-            {
-                var startNotAllowedMessage = $"Only the {CommandName} command is allowed";
-                await _messageFactory.CreateStandardMessage(startNotAllowedMessage).SendAsync();
-            }
-            else if (_next != null)
-            {
-                await _next.HandleAsync(request);
-            }
-            
+            await HandleNonStartCommandAsync(request);
             return;
         }
 
-        await session.FireStartAsync();
+        await HandleStartCommandAsync();
+    }
+
+    private static bool IsStartCommandReceived(Update request)
+        => request.GetMessage() == CommandName;
+    
+    private async Task HandleStartCommandAsync() 
+        => await ExecutionContext.Session
+            .FireStartAsync();
+    
+    private async Task HandleNonStartCommandAsync(NewtonsoftJsonUpdate request)
+    {
+        if (ExecutionContext.Session.State.IsBeforeStart())
+        {
+            var startNotAllowedMessage = $"Only the {CommandName} command is allowed";
+            await _messageFactory.CreateStandardMessage(startNotAllowedMessage).SendAsync();
+        }
+        else if (_next != null)
+        {
+            await _next.HandleAsync(request);
+        }
     }
 }

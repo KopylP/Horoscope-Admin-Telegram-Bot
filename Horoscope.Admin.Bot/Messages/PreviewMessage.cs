@@ -28,7 +28,7 @@ public class PreviewMessage : BaseMessage
 
     public override async Task SendAsync()
     {
-        var chatId = ExecutionContext.GetChatId();
+        var chatId = ExecutionContext.ChatId;
         await BotClient.SendTextMessageAsync(
             chatId,
             _message,

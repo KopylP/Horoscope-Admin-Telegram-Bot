@@ -16,7 +16,7 @@ public sealed class ProvideDateMessage: BaseMessage
 
     public override async Task SendAsync()
     {
-        var chatId = ExecutionContext.GetChatId();
+        var chatId = ExecutionContext.ChatId;
         await BotClient.SendTextMessageAsync(chatId, Message, replyMarkup: GenerateKeyboard());
     }
 

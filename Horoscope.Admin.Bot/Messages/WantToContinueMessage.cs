@@ -34,7 +34,7 @@ public class WantToContinueMessage: BaseMessage
             .Build();
         
         await BotClient.SendTextMessageAsync(
-            ExecutionContext.GetChatId(),
+            ExecutionContext.ChatId,
             _message, 
             replyMarkup: keyboard,
             parseMode: ParseMode.MarkdownV2);

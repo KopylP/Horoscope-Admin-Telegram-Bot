@@ -69,7 +69,7 @@ public sealed class ChooseSignMessage: BaseMessage
             .ToString()
             .EscapeMarkdown();
         
-        var chatId = ExecutionContext.GetChatId();
+        var chatId = ExecutionContext.ChatId;
         await BotClient.SendTextMessageAsync(
             chatId,
             message,
@@ -78,7 +78,7 @@ public sealed class ChooseSignMessage: BaseMessage
 
     private async Task SendMainMessage()
     {
-        var chatId = ExecutionContext.GetChatId();
+        var chatId = ExecutionContext.ChatId;
         await BotClient.SendTextMessageAsync(
             chatId,
             _message,
