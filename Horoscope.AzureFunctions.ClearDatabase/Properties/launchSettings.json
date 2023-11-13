@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Horoscope.AzureFunctions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7013",
+      "launchBrowser": false
+    }
+  }
+}

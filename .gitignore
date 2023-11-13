@@ -3,6 +3,7 @@
 *.suo
 *.user
 .vs/
+.vscode/
 [Bb]in/
 [Oo]bj/
 _UpgradeReport_Files/
@@ -15,3 +16,4 @@ Desktop.ini
 horoscopewidget-70549-firebase-adminsdk-w0yxe-9bca91a069.json
 appsettings.Development.json
 appsettings.json
+local.settings.json
