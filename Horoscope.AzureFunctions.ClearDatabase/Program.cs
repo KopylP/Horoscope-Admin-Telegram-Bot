@@ -6,6 +6,12 @@ using Microsoft.Extensions.Hosting;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
+    .ConfigureAppConfiguration((hostingContext, config) =>
+    {
+        config.AddEnvironmentVariables();
+        config.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
+    })
     .ConfigureServices((context, services) =>
     {
         var firebaseSettings = context.Configuration["FirebaseConfiguration"];
@@ -17,12 +23,6 @@ var host = new HostBuilder()
             ProjectId = firebaseProjectId,
             Credential = credential
         }.Build());
-    })
-    .ConfigureAppConfiguration((hostingContext, config) =>
-    {
-        config.AddEnvironmentVariables();
-        config.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables();
     })
     .Build();
 
