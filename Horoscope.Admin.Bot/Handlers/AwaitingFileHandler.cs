@@ -15,7 +15,7 @@ namespace Horoscope.Admin.Bot.Handlers;
 
 public class AwaitingFileHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
 {
-    public string SuccessMessage = "Успішно опубліковано {0} передбачень.";
+    private const string SuccessMessage = "Успішно опубліковано {0} передбачень.";
     
     private readonly ITelegramBotClient _botClient;
     private readonly IDraftLoader _draftLoader;

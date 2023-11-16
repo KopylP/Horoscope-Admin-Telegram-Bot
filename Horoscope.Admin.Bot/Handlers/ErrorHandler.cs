@@ -21,9 +21,7 @@ public class ErrorHandler : IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>
     
     public async Task<Result> HandleAsync(NewtonsoftJsonUpdate request)
     {
-        if (_next is null)
-            return Result.Success();
-
+        if (_next is null) return Result.Success();
         var result = await _next.HandleAsync(request);
         
         await result.OnFail(async res =>

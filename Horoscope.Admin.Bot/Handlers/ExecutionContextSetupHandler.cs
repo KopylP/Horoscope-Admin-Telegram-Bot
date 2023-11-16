@@ -32,19 +32,15 @@ public sealed class ExecutionContextSetupHandler: IChainOfResponsibilityHandler<
         ExecutionContext.Apply(chatId);
         ExecutionContext.Apply(draft);
 
-        if (_next is not null)
+        if (_next is null) return Result.Success();
+        var result = await _next!.HandleAsync(update);
+
+        await result.OnSuccess(async (_) =>
         {
-            var result = await _next!.HandleAsync(update);
+            await _sessionStateProvider.UpdateAsync(chatId, ExecutionContext.Session);
+            await _draftRepository.SaveAsync(chatId, ExecutionContext.Draft);
+        });
 
-            await result.OnSuccess(async (_) =>
-            {
-                await _sessionStateProvider.UpdateAsync(chatId, ExecutionContext.Session);
-                await _draftRepository.SaveAsync(chatId, ExecutionContext.Draft);
-            });
-
-            return result;
-        }
-
-        return Result.Success();
+        return result;
     }
 }

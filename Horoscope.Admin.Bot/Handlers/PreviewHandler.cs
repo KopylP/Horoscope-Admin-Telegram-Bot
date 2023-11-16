@@ -30,7 +30,7 @@ public sealed class PreviewHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
         }
     }
     
-    private async Task HandleEditCommandAsync()
+    private static async Task HandleEditCommandAsync()
     {
         await ExecutionContext.Session
             .FireInitiateDescriptionChangeAsync();
