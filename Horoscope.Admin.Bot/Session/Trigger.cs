@@ -4,7 +4,8 @@ public enum Trigger
 {
     Start,
     ApiKeySubmitted,
-    BeginHoroscopeEditing,
+    BeginHoroscopeEditingManually,
+    InitiateLoadFile,
     InitiateDescriptionChange,
     DateSubmitted,
     LanguageSelectionSubmitted,

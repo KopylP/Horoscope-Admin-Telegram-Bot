@@ -1,20 +1,22 @@
 using System.Globalization;
-using Horoscope.Admin.Bot.Framework.Contexts;
 using Horoscope.Admin.Bot.Framework.Dates;
 using Horoscope.Admin.Bot.Framework.Extensions;
 using Horoscope.Admin.Bot.Framework.Persistence;
+using Horoscope.Admin.Bot.Framework.Results;
+using Horoscope.Admin.Bot.Infrastructure.Persistence;
 using Horoscope.Admin.Bot.Models;
-using Horoscope.Admin.Bot.Persistence;
 
-namespace Horoscope.Admin.Bot.Repositories;
+namespace Horoscope.Admin.Bot.Infrastructure.Repositories;
 
 public sealed class DraftRepository : IDraftRepository
 {
     private readonly FirestoreProvider _firestoreProvider;
+    private readonly ILogger<DraftRepository> _logger;
 
-    public DraftRepository(FirestoreProvider firestoreProvider)
+    public DraftRepository(FirestoreProvider firestoreProvider, ILogger<DraftRepository> logger)
     {
         _firestoreProvider = firestoreProvider;
+        _logger = logger;
     }
     
     public async Task<Draft> GetAsync(long chatId)
@@ -47,19 +49,39 @@ public sealed class DraftRepository : IDraftRepository
         await _firestoreProvider.AddOrUpdate(draftPersistence);
     }
 
-    public async Task PublishAsync(Draft draft)
+    public async Task<Result> PublishAsync(Draft draft)
     {
-        var date = draft.Date!.Value.ToString(DateFormats.DdMmYyyy);
-        
-        var horoscope = new HoroscopePersistence
-        {
-            Id = GetPublishId(draft.Date.Value, draft.Sign),
-            Sign = draft.Sign.ToString(),
-            Foresight = draft.Foresight!.Values,
-            Date = date
-        };
+        if (draft is null)
+            throw new ArgumentException("Draft cannot be null!");
 
+        if (!draft.IsReadyForPublish)
+            return Result.Fail("DraftIsNotReadyForPublish");
+        
+        var horoscope = ToHoroscopePersistence(draft);
         await _firestoreProvider.AddOrUpdate(horoscope);
+        return Result.Success();
+    }
+    
+    public async Task<ResultList> PublishBulkAsync(IEnumerable<Draft>? drafts)
+    {
+        drafts = drafts?.ToArray() ?? Array.Empty<Draft>();
+        
+        var resultList = ResultList.CreateForAnySuccessStrategy();
+        var results = drafts.Select(d => d.IsReadyForPublish ?
+            Result.Success() :
+            Result.Fail("DraftIsNotReadyForPublish"))
+            .ToArray();
+        resultList.AddResults(results);
+        
+        var readyForPublishDrafts = drafts
+            .Where(draft => draft.IsReadyForPublish)
+            .Select(ToHoroscopePersistence)
+            .ToArray();
+        
+        if (readyForPublishDrafts.Any())
+            await _firestoreProvider.AddOrUpdateBulk(readyForPublishDrafts);
+
+        return resultList;
     }
 
     public async Task<Draft?> CreateFromPublished(DateTime date, ZodiacSign sign)
@@ -83,4 +105,15 @@ public sealed class DraftRepository : IDraftRepository
     private string GetPublishId(DateTime date, ZodiacSign sign, string language = "UA") 
         => $"{date.ToString(DateFormats.DdMmYyyy)}-{sign.ToString()}-UA"
         .Replace(".", "-");
+
+    private HoroscopePersistence ToHoroscopePersistence(Draft draft)
+    {
+        return new HoroscopePersistence
+        {
+            Id = GetPublishId(draft.Date!.Value, draft.Sign),
+            Sign = draft.Sign.ToString(),
+            Foresight = draft.Foresight!.Values,
+            Date = draft.Date!.Value.ToString(DateFormats.DdMmYyyy),
+        };
+    }
 }

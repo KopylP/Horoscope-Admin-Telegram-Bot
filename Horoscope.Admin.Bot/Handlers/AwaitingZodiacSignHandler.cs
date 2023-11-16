@@ -1,38 +1,36 @@
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
 using Horoscope.Admin.Bot.Framework.Helpers;
+using Horoscope.Admin.Bot.Framework.Results;
+using Horoscope.Admin.Bot.Infrastructure.Repositories;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
-using Horoscope.Admin.Bot.Repositories;
 using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot.Handlers;
 
 public sealed class AwaitingZodiacSignHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
 {
-    private const string ErrorMessage = "Я не знаю такого знаку \ud83d\ude22 Спробуй ще! ";
-
-    private readonly IMessageFactory _messageFactory;
     private readonly IDraftRepository _draftRepository;
     
     public AwaitingZodiacSignHandler(
         IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>? next,
-        IMessageFactory messageFactory, IDraftRepository draftRepository)  : base(next, State.AwaitingZodiacSign)
+        IDraftRepository draftRepository)  : base(next, State.AwaitingZodiacSign)
     {
-        _messageFactory = messageFactory;
         _draftRepository = draftRepository;
     }
 
-    protected override async Task StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
+    protected override async Task<Result> StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
     {
         if (!TryGetSignFromRequest(request, out var sign))
         {
-            await SendErrorMessageAsync();
-            return;
+            return Result.Fail(FailCodes.InvalidZodiacSign);
         }
 
         ExecutionContext.Draft.Sign = sign;
         await HandleSignAsync(sign);
+
+        return Result.Success();
     }
     
     private bool TryGetSignFromRequest(NewtonsoftJsonUpdate request, out ZodiacSign sign)
@@ -57,10 +55,5 @@ public sealed class AwaitingZodiacSignHandler : SessionBasedHandler<NewtonsoftJs
             await ExecutionContext.Session
                 .FireInitiateDescriptionChangeAsync();
         }
-    }
-    
-    private async Task SendErrorMessageAsync()
-    {
-        await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
     }
 }

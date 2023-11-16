@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
@@ -11,9 +12,6 @@ namespace Horoscope.Admin.Bot.Handlers;
 
 public sealed class BeginningHoroscopeEditHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
 {
-    private const string ErrorMessage = "Щось не збігається \ud83d\ude22 " +
-                                        $"Натисніть кнопку \"{ReplyCommands.BeginningHoroscopeEdit.Begin}\"!";
-    
     private readonly IMessageFactory _messageFactory;
 
     public BeginningHoroscopeEditHandler(
@@ -24,23 +22,29 @@ public sealed class BeginningHoroscopeEditHandler : SessionBasedHandler<Newtonso
         _messageFactory = messageFactory;
     }
 
-    protected override async Task StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
+    protected override async Task<Result> StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
     {
-        if (!IsBeginCommandReceived(request))
+        if (IsManuallyCommandReceived(request))
         {
-            await SendErrorMessageAsync();
-            return;
+            await ExecutionContext.Session
+                .FireBeginHoroscopeEditingManuallyAsync();
         }
-        
-        await ExecutionContext.Session
-            .FireBeginHoroscopeEditingAsync();
+        else if (IsLoadFileCommandReceived(request))
+        {
+            await ExecutionContext.Session
+                .FireInitiateLoadFileAsync();
+        }
+        else
+        {
+            return Result.Fail(FailCodes.FailInput);
+        }
+
+        return Result.Success();
     }
 
-    private static bool IsBeginCommandReceived(Update request)
-        => request.GetMessage() == ReplyCommands.BeginningHoroscopeEdit.Begin;
+    private static bool IsManuallyCommandReceived(Update request)
+        => request.GetMessage() == ReplyCommands.BeginningHoroscopeEdit.Manually;
     
-    private async Task SendErrorMessageAsync() 
-        => await _messageFactory
-            .CreateStandardMessage(ErrorMessage)
-            .SendAsync();
+    private static bool IsLoadFileCommandReceived(Update request)
+        => request.GetMessage() == ReplyCommands.BeginningHoroscopeEdit.LoadFile;
 }

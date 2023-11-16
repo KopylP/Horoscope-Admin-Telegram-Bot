@@ -10,7 +10,8 @@ public static class ReplyCommands
 
     public static class BeginningHoroscopeEdit
     {
-        public const string Begin = "Полетіли \ud83d\ude80";
+        public const string Manually = "Хочу вручну \u270d\ufe0f";
+        public const string LoadFile = "Завантажу файл \ud83d\udce4";
     }
     
     public static class Continue

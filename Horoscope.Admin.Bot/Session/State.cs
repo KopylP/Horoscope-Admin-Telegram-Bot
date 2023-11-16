@@ -6,6 +6,7 @@ public enum State
     AwaitingApiKey,
     BeginningHoroscopeEdit,
     AwaitingDateInput,
+    AwaitingFile,
     AwaitingLanguageSelection,
     AwaitingZodiacSign,
     AwaitingForesightInput,

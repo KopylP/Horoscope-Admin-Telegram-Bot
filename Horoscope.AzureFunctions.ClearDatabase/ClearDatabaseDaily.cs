@@ -16,13 +16,13 @@ public class ClearDatabaseDaily
     }
 
     [Function("ClearDatabaseDaily")]
-    public async Task Run([TimerTrigger("0 1 * * * *")] TimerInfo myTimer)
+    public async Task Run([TimerTrigger("0 0 1 * * *")] TimerInfo myTimer)
     {
         _logger.LogInformation($"ClearDatabaseDaily trigger function executed at: {DateTime.UtcNow}");
 
         try
         {
-            var deletedDocumentsCount = await DeleteDocumentsFromYesterday();
+            var deletedDocumentsCount = await DeleteDocumentsFromWeekAgo();
             _logger.LogInformation($"{deletedDocumentsCount} documents were deleted.");
         }
         catch (Exception e)
@@ -31,11 +31,11 @@ public class ClearDatabaseDaily
         }
     }
     
-    private async Task<int> DeleteDocumentsFromYesterday()
+    private async Task<int> DeleteDocumentsFromWeekAgo()
     {
-        var yesterdayDate = DateTime.UtcNow.AddDays(-1).ToString("dd.MM.yyyy");
+        var weekAgoDate = DateTime.UtcNow.AddDays(-7).ToString("dd.MM.yyyy");
         var collection = _firestoreDb.Collection("Horoscope");
-        var query = collection.WhereEqualTo("Date", yesterdayDate);
+        var query = collection.WhereEqualTo("Date", weekAgoDate);
         var snapshot = await query.GetSnapshotAsync();
 
         int documentsCount = 0;

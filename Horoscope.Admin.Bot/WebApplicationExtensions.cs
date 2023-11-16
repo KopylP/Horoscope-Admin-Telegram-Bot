@@ -15,7 +15,7 @@ public static class WebApplicationExtensions
                 NewtonsoftJsonUpdate update,
                 [FromServices] IChainOfResponsibilityHandler<NewtonsoftJsonUpdate> handler) =>
             {
-                if (string.IsNullOrWhiteSpace(update.GetMessage()))
+                if (update.Message is null)
                     return Results.Ok();
 
                 await handler.HandleAsync(update);

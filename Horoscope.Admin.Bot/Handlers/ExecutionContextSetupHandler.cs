@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Framework.Chains;
+using Horoscope.Admin.Bot.Framework.Results;
+using Horoscope.Admin.Bot.Infrastructure.Repositories;
 using Horoscope.Admin.Bot.Models;
-using Horoscope.Admin.Bot.Repositories;
 using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot.Handlers;
@@ -21,7 +22,7 @@ public sealed class ExecutionContextSetupHandler: IChainOfResponsibilityHandler<
         _draftRepository = draftRepository;
     }
 
-    public async Task HandleAsync(NewtonsoftJsonUpdate update)
+    public async Task<Result> HandleAsync(NewtonsoftJsonUpdate update)
     {
         var chatId = update.Message!.Chat.Id;
         var sessionState = await _sessionStateProvider.GetStateAsync(chatId);
@@ -31,17 +32,19 @@ public sealed class ExecutionContextSetupHandler: IChainOfResponsibilityHandler<
         ExecutionContext.Apply(chatId);
         ExecutionContext.Apply(draft);
 
-        await HasNextAsync(async () =>
-        {
-            await _next!.HandleAsync(update);
-            await _sessionStateProvider.UpdateAsync(chatId, ExecutionContext.Session);
-            await _draftRepository.SaveAsync(chatId, ExecutionContext.Draft);
-        });
-    }
-
-    private async Task HasNextAsync(Func<Task> action)
-    {
         if (_next is not null)
-            await action();
+        {
+            var result = await _next!.HandleAsync(update);
+
+            await result.OnSuccess(async (_) =>
+            {
+                await _sessionStateProvider.UpdateAsync(chatId, ExecutionContext.Session);
+                await _draftRepository.SaveAsync(chatId, ExecutionContext.Draft);
+            });
+
+            return result;
+        }
+
+        return Result.Success();
     }
 }

@@ -29,7 +29,15 @@ public static class EnumHelpers
                 return true;
             }
         }
-        
-        return false;
+
+        try
+        {
+            enumValue = displayName.ToEnum<T>();
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
     }
 }

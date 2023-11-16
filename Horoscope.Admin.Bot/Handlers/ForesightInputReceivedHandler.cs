@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
@@ -10,8 +11,6 @@ namespace Horoscope.Admin.Bot.Handlers;
 
 public sealed class ForesightInputReceivedHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
 {
-    private const string ErrorMessage = "Не знаю такої опції \ud83d\ude14 Вибери ще!";
-    
     private readonly IMessageFactory _messageFactory;
     
     public ForesightInputReceivedHandler(
@@ -22,7 +21,7 @@ public sealed class ForesightInputReceivedHandler: SessionBasedHandler<Newtonsof
         _messageFactory = messageFactory;
     }
 
-    protected override async Task StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
+    protected override async Task<Result> StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
     {
         switch (request.GetMessage())
         {
@@ -35,9 +34,10 @@ public sealed class ForesightInputReceivedHandler: SessionBasedHandler<Newtonsof
                 break;
             
             default:
-                await SendErrorMessageAsync();
-                break;
+                return Result.Fail(FailCodes.FailInput);
         }
+
+        return Result.Success();
     }
     
     private async Task HandleNextSignAsync()
@@ -50,10 +50,5 @@ public sealed class ForesightInputReceivedHandler: SessionBasedHandler<Newtonsof
     {
         await ExecutionContext.Session
             .FireAdvanceToNextDateAsync();
-    }
-
-    private async Task SendErrorMessageAsync()
-    {
-        await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
     }
 }

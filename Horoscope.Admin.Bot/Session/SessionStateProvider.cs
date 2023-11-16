@@ -1,7 +1,7 @@
 using Horoscope.Admin.Bot.Framework.Extensions;
 using Horoscope.Admin.Bot.Framework.Persistence;
 using Horoscope.Admin.Bot.Framework.Sessions;
-using Horoscope.Admin.Bot.Persistence;
+using Horoscope.Admin.Bot.Infrastructure.Persistence;
 
 namespace Horoscope.Admin.Bot.Session;
 

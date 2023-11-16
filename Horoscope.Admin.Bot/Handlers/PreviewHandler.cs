@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
@@ -10,27 +11,22 @@ namespace Horoscope.Admin.Bot.Handlers;
 
 public sealed class PreviewHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
 {
-    private const string ErrorMessage = "Не знаю такої опції \ud83d\ude14 Вибери ще!";
     
-    private readonly IMessageFactory _messageFactory;
-    
-    public PreviewHandler(IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>? next, IMessageFactory messageFactory) 
+    public PreviewHandler(IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>? next) 
         : base(next, State.Preview)
     {
-        _messageFactory = messageFactory;
     }
 
-    protected override async Task StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
+    protected override async Task<Result> StateMatchedHandleAsync(NewtonsoftJsonUpdate request)
     {
         switch (request.GetMessage())
         {
             case ReplyCommands.Preview.Edit:
                 await HandleEditCommandAsync();
-                break;
+                return Result.Success();
             
             default:
-                await SendErrorMessageAsync();
-                break;
+                return Result.Fail(FailCodes.FailInput);
         }
     }
     
@@ -38,10 +34,5 @@ public sealed class PreviewHandler: SessionBasedHandler<NewtonsoftJsonUpdate>
     {
         await ExecutionContext.Session
             .FireInitiateDescriptionChangeAsync();
-    }
-
-    private async Task SendErrorMessageAsync()
-    {
-        await _messageFactory.CreateStandardMessage(ErrorMessage).SendAsync();
     }
 }

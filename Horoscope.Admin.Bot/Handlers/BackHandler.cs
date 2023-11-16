@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
 using Telegram.Bot.Types;
@@ -16,16 +17,16 @@ public sealed class BackHandler :  IChainOfResponsibilityHandler<NewtonsoftJsonU
         _next = next;
     }
 
-    public async Task HandleAsync(NewtonsoftJsonUpdate request)
+    public async Task<Result> HandleAsync(NewtonsoftJsonUpdate request)
     {
-        if (IsBackCommandReceived(request))
+        if (!IsBackCommandReceived(request) && _next is not null)
         {
-            await ExecutionContext.Session.FireNavigateBackAsync();
+            return await _next.HandleAsync(request);
+
         }
-        else if (_next is not null)
-        {
-            await _next.HandleAsync(request);
-        }
+        
+        await ExecutionContext.Session.FireNavigateBackAsync();
+        return Result.Success();
     }
 
     private static bool IsBackCommandReceived(Update request)

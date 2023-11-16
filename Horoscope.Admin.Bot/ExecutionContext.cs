@@ -1,5 +1,5 @@
-using Horoscope.Admin.Bot.Framework.Contexts;
 using Horoscope.Admin.Bot.Framework.Sessions;
+using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot;

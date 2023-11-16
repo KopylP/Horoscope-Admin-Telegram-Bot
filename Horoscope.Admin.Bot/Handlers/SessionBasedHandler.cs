@@ -1,4 +1,5 @@
 using Horoscope.Admin.Bot.Framework.Chains;
+using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Session;
 
 namespace Horoscope.Admin.Bot.Handlers;
@@ -14,17 +15,20 @@ public abstract class SessionBasedHandler<TRequest> : IChainOfResponsibilityHand
         _next = next;
     }
 
-    public async Task HandleAsync(TRequest request)
+    public async Task<Result> HandleAsync(TRequest request)
     {
         if (ExecutionContext.Session.State == _handlerState)
         {
-            await StateMatchedHandleAsync(request);
-            return;
+            return await StateMatchedHandleAsync(request);
+        }
+        
+        if (_next is not null)
+        {
+            return await _next.HandleAsync(request);
         }
 
-        if (_next is not null) 
-            await _next.HandleAsync(request);
+        return Result.Success();
     }
 
-    protected abstract Task StateMatchedHandleAsync(TRequest request);
+    protected abstract Task<Result> StateMatchedHandleAsync(TRequest request);
 }

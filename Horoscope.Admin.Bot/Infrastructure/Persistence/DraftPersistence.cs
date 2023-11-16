@@ -1,7 +1,7 @@
 using Google.Cloud.Firestore;
 using Horoscope.Admin.Bot.Framework.Persistence;
 
-namespace Horoscope.Admin.Bot.Persistence;
+namespace Horoscope.Admin.Bot.Infrastructure.Persistence;
 
 [FirestoreData]
 public sealed class DraftPersistence : IFirebaseEntity

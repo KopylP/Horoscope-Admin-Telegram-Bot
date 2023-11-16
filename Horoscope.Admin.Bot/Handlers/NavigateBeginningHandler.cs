@@ -1,6 +1,7 @@
 using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
+using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
@@ -17,17 +18,15 @@ public sealed class NavigateBeginningHandler :  IChainOfResponsibilityHandler<Ne
         _next = next;
     }
     
-    public async Task HandleAsync(NewtonsoftJsonUpdate request)
+    public async Task<Result> HandleAsync(NewtonsoftJsonUpdate request)
     {
-        if (IsNavigateBeginningCommandReceived(request))
+        if (!IsNavigateBeginningCommandReceived(request) && _next is not null)
         {
-            await ExecutionContext.Session
-                .FireNavigateBeginningAsync();
+            return await _next.HandleAsync(request);
         }
-        else if (_next is not null)
-        {
-            await _next.HandleAsync(request);
-        }
+        
+        await ExecutionContext.Session.FireNavigateBeginningAsync();
+        return Result.Success();
     }
     
     private static bool IsNavigateBeginningCommandReceived(Update request)

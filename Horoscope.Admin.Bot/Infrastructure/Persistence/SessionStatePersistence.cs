@@ -1,10 +1,8 @@
 using Google.Cloud.Firestore;
-using Horoscope.Admin.Bot.Framework.Contexts;
 using Horoscope.Admin.Bot.Framework.Persistence;
-using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
 
-namespace Horoscope.Admin.Bot.Persistence;
+namespace Horoscope.Admin.Bot.Infrastructure.Persistence;
 
 [FirestoreData]
 public sealed class SessionStatePersistence : IFirebaseEntity

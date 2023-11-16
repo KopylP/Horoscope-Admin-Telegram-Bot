@@ -39,9 +39,9 @@ public static class SessionStateExtensions
         return session.FireAsync(Trigger.InitiateDescriptionChange);
     }
 
-    public static Task FireBeginHoroscopeEditingAsync(this SessionState<State, Trigger> session)
+    public static Task FireBeginHoroscopeEditingManuallyAsync(this SessionState<State, Trigger> session)
     {
-        return session.FireAsync(Trigger.BeginHoroscopeEditing);
+        return session.FireAsync(Trigger.BeginHoroscopeEditingManually);
     }
 
     public static Task FireDateSubmittedAsync(this SessionState<State, Trigger> session)
@@ -57,5 +57,10 @@ public static class SessionStateExtensions
     public static Task FireProceedToPreviewAsync(this SessionState<State, Trigger> session)
     {
         return session.FireAsync(Trigger.ProceedToPreview);
+    }
+
+    public static Task FireInitiateLoadFileAsync(this SessionState<State, Trigger> session)
+    {
+        return session.FireAsync(Trigger.InitiateLoadFile);
     }
 }

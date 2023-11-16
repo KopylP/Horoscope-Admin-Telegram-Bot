@@ -2,7 +2,7 @@ namespace Horoscope.Admin.Bot.Framework.Extensions;
 
 public static class StringExtensions
 {
-    public static T ToEnum<T>(this string value, bool ignoreCase = true) where T : struct
+    public static T ToEnum<T>(this string value, bool ignoreCase = true) where T : Enum
     {
         if (!typeof(T).IsEnum)
         {

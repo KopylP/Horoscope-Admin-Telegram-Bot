@@ -18,6 +18,24 @@ public class FirestoreProvider
             .Document(entity.Id);
         await document.SetAsync(entity, cancellationToken: ct);
     }
+    
+    public async Task AddOrUpdateBulk<T>(IEnumerable<T> entities, CancellationToken ct = default) where T : IFirebaseEntity
+    {
+        if (entities == null || !entities.Any())
+        {
+            throw new ArgumentException("Entities collection cannot be null or empty.");
+        }
+
+        var batch = _fireStoreDb.StartBatch();
+    
+        foreach (var entity in entities)
+        {
+            var documentReference = _fireStoreDb.Collection(GetEntityName<T>()).Document(entity.Id);
+            batch.Set(documentReference, entity);
+        }
+
+        await batch.CommitAsync(ct);
+    }
 
     public async Task<T?> Get<T>(string id, CancellationToken ct = default) where T : IFirebaseEntity
     {

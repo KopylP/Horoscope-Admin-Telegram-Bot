@@ -15,10 +15,12 @@ public static class ServiceCollectionExtensions
         services
             .Chain<IChainOfResponsibilityHandler<NewtonsoftJsonUpdate>>()
             .Add<ExecutionContextSetupHandler>()
+            .Add<ErrorHandler>()
             .Add<StartHandler>()
             .Add<AwaitingApiKeyHandler>()
             .Add<BeginningHoroscopeEditHandler>()
             .Add<BackHandler>()
+            .Add<AwaitingFileHandler>()
             .Add<AwaitingDateInputHandler>()
             .Add<NavigateBeginningHandler>()
             .Add<AwaitingZodiacSignHandler>()

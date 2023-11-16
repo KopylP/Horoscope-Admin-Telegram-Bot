@@ -17,7 +17,8 @@ public sealed class BeginningHoroscopeEditStateConfigurator : ISessionStateConfi
     {
         sessionState.Configure(State.BeginningHoroscopeEdit)
             .Permit(Trigger.Start, State.AwaitingApiKey)
-            .Permit(Trigger.BeginHoroscopeEditing, State.AwaitingDateInput)
+            .Permit(Trigger.BeginHoroscopeEditingManually, State.AwaitingDateInput)
+            .Permit(Trigger.InitiateLoadFile, State.AwaitingFile)
             .OnEntryAsync(() => new StartEditHoroscopeMessage(_botClient).SendAsync());
     }
 }

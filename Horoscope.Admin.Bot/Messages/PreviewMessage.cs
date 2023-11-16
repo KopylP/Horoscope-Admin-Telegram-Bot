@@ -1,9 +1,9 @@
 using Horoscope.Admin.Bot.Commands;
-using Horoscope.Admin.Bot.Framework.Contexts;
 using Horoscope.Admin.Bot.Framework.Dates;
 using Horoscope.Admin.Bot.Framework.Extensions;
 using Horoscope.Admin.Bot.Framework.Keyword;
 using Horoscope.Admin.Bot.Messages.Extensions;
+using Horoscope.Admin.Bot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -23,7 +23,7 @@ public class PreviewMessage : BaseMessage
     {
         _message = string.Format(Message, draft.Date, draft.Sign.GetDisplayName())
             .EscapeMarkdown();
-        _foresight = (string)draft.Foresight!;
+        _foresight = draft.Foresight!.ToString();
     }
 
     public override async Task SendAsync()
