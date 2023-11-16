@@ -3,7 +3,6 @@ using Horoscope.Admin.Bot.Framework.Extensions;
 using Horoscope.Admin.Bot.Framework.Helpers;
 using Horoscope.Admin.Bot.Framework.Results;
 using Horoscope.Admin.Bot.Infrastructure.Repositories;
-using Horoscope.Admin.Bot.Messages;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
 

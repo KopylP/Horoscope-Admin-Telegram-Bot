@@ -2,7 +2,6 @@ using Horoscope.Admin.Bot.Commands;
 using Horoscope.Admin.Bot.Framework.Chains;
 using Horoscope.Admin.Bot.Framework.Extensions;
 using Horoscope.Admin.Bot.Framework.Results;
-using Horoscope.Admin.Bot.Framework.Sessions;
 using Horoscope.Admin.Bot.Models;
 using Horoscope.Admin.Bot.Session;
 using Telegram.Bot.Types;
