@@ -47,8 +47,8 @@ public class AwaitingFileHandler : SessionBasedHandler<NewtonsoftJsonUpdate>
         }
 
         var drafts = await LoadDraftsAsync(request);
-        var publishedDrafts = await _draftRepository.PublishBulkAsync(drafts);
-        await SendSuccessMessage(publishedDrafts);
+        var publishedDraftsResult = await _draftRepository.PublishBulkAsync(drafts);
+        await SendSuccessMessage(publishedDraftsResult);
         await ExecutionContext.Session.FireNavigateBeginningAsync();
         return Result.Success();
     }
